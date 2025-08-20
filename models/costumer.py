@@ -4,8 +4,6 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 # Costumer Model
 class Costumer(db.Model):
-    # Name of the table
-    __tablename__ = "Costumer" 
     # Attributes
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
