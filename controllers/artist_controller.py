@@ -46,7 +46,9 @@ def create_an_artist():
             
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"messsage":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
+            return {"message":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
+            return {"message":"Name has to be unique."}, 400
         else:
             return {"message":"Unexpected error has ocurred."}, 400
 
@@ -62,7 +64,7 @@ def delete_artist(artist_id):
         db.session.commit()
         return {"message": f"Artist '{artist.name}' has been removed succesfully."}, 200
     else:
-        return{"message":f"Artist with id '{artist.name}' does not exist."}, 404
+        return{"message":f"Artist does not exist."}, 404
     
 
 

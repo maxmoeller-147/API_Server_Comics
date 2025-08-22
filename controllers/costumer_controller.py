@@ -49,7 +49,7 @@ def create_a_costumer():
         return jsonify(costumer_schema.dump(new_costumer)), 201
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"messsage":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
+            return {"message":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"message":"Email has to be unique."}, 400
         else:
@@ -67,7 +67,7 @@ def delete_costumer(costumer_id):
         db.session.commit()
         return {"message": f"Costumer '{costumer.name}' has been removed succesfully."}, 200
     else:
-        return{"message":f"Costumer with id '{costumer.name}' does not exist."}, 404
+        return{"message":f"Costumer does not exist."}, 404 
     
 
 

@@ -1,6 +1,9 @@
 from flask import Blueprint
 from init import db
 from models.costumer import Costumer
+from models.artist import Artist
+from models.writer import Writer
+from models.publisher import Publisher
 
 database_controller = Blueprint("db", __name__)
 
@@ -32,7 +35,39 @@ def seed_table():
                  email="gaby@email.com",
                  contact="0448135984")
     ]
-
     db.session.add_all(costumers)
+
+
+
+    artists = [
+        Artist(name="Dave Gibbons"),
+        
+        Artist(name="Frank Quitely"),
+        
+        Artist(name="Steve McNiven")
+    ]
+    db.session.add_all(artists)
+
+   
+
+    writers = [
+        Writer(name="Alan Moore"),
+        
+        Writer(name="Grant Morrison"),
+        
+        Writer(name="Mark Millar")
+    ]
+    db.session.add_all(writers)
+
+
+
+    publishers = [
+        Publisher(name="DC Comics"),
+        
+        Publisher(name="Marvel Comics")
+    ]
+    db.session.add_all(publishers)
+
     db.session.commit()
+
     print("Tables seeded.")
