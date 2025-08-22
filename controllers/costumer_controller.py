@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request 
+from sqlalchemy.exc import IntegrityError
 from models.costumer import Costumer, costumers_schema, costumer_schema
 from init import db
+from psycopg2 import errorcodes
 
 costumer_bp = Blueprint("costumer", __name__,url_prefix="/costumers")
 
@@ -30,16 +32,56 @@ def get_a_costumer(costumer_id):
         return {"message":f"Costumer {costumer_id} does not exist."}, 404
     
 
-# CREATE A COSTUMER
+
+# POST: CREATE A COSTUMER
 @costumer_bp.route("/",methods = ["POST"])
 def create_a_costumer():
-    body_data = request.get_json()
-    new_costumer = Costumer(
-        name = body_data.get("name"),
-        email = body_data.get("email"),
-        contact = body_data.get("contact")
-    )
-    db.session.add(new_costumer)
-    db.session.commit()
+    try:
+        body_data = request.get_json()
+        new_costumer = Costumer(
+            name = body_data.get("name"),
+            email = body_data.get("email"),
+            contact = body_data.get("contact")
+        )
+        db.session.add(new_costumer)
+        db.session.commit()
 
-    return jsonify(costumer_schema.dump(new_costumer)), 201
+        return jsonify(costumer_schema.dump(new_costumer)), 201
+    except IntegrityError as err:
+        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
+            return {"messsage":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
+            return {"message":"Email has to be unique."}, 400
+        else:
+            return {"message":"Unexpected error has ocurred."}, 400
+        
+
+
+# DELETE: id
+@costumer_bp.route("/<int:costumer_id>", methods=["DELETE"])
+def delete_costumer(costumer_id):
+    stmt = db.select(Costumer).where(Costumer.id == costumer_id)
+    costumer = db.session.scalar(stmt)
+    if costumer:
+        db.session.delete(costumer)
+        db.session.commit()
+        return {"message": f"Costumer '{costumer.name}' has been removed succesfully."}, 200
+    else:
+        return{"message":f"Costumer with id '{costumer.name}' does not exist."}, 404
+    
+
+
+# UPDATE: /costumers/id
+@costumer_bp.route("/<int:costumer_id>", methods=["PUT","PATCH"])
+def update_costumer(costumer_id):
+    stmt = db.select(Costumer).where(Costumer.id == costumer_id)
+    costumer = db.session.scalar(stmt)
+    if costumer:
+        body_data = request.get_json()
+        costumer.name = body_data.get("name") or costumer.name
+        costumer.email = body_data.get("email") or costumer.email
+        costumer.contact = body_data.get("contact") or costumer.contact
+        db.session.commit()
+        return jsonify(costumer_schema.dump(costumer))
+    else:
+        return {"message":f"Costumer with id {costumer_id} does not exist."}, 404
