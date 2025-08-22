@@ -1,5 +1,4 @@
 from init import db
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 
 # Artist Model
@@ -9,13 +8,3 @@ class Artist(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
 
 
-class ArtistSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Artist
-        load_instance = True
-
-# Schema for single entry
-artist_schema = ArtistSchema()
-
-# Schema for multiple entries
-artists_schema = ArtistSchema(many=True) 

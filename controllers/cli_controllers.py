@@ -1,5 +1,6 @@
 from flask import Blueprint
 from init import db
+from models.order import Order
 from models.costumer import Costumer
 from models.artist import Artist
 from models.writer import Writer
@@ -39,6 +40,16 @@ def seed_table():
 
 
 
+    orders = [
+        Order(  
+                costumer_id=costumers[0].id,
+                description="Paid. pick up next monday"
+              )
+
+    ]
+    db.session.add_all(orders)
+
+
     artists = [
         Artist(name="Dave Gibbons"),
         
@@ -68,6 +79,9 @@ def seed_table():
     ]
     db.session.add_all(publishers)
 
+
+
+    
     db.session.commit()
 
     print("Tables seeded.")

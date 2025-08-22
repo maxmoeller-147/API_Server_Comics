@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request 
-from models.publisher import Publisher, publishers_schema, publisher_schema
+from models.publisher import Publisher
+from schemas.schemas import publishers_schema, publisher_schema
 from init import db
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes

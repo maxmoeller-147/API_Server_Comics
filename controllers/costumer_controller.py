@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request 
 from sqlalchemy.exc import IntegrityError
-from models.costumer import Costumer, costumers_schema, costumer_schema
+from models.costumer import Costumer
+from schemas.schemas import costumers_schema, costumer_schema
 from init import db
 from psycopg2 import errorcodes
 

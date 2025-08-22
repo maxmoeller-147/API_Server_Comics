@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request 
-from models.artist import Artist, artists_schema, artist_schema
+from models.artist import Artist
+from schemas.schemas import artists_schema, artist_schema
 from init import db
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes

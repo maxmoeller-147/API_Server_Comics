@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request 
-from models.writer import Writer, writers_schema, writer_schema
+from models.writer import Writer
+from schemas.schemas import writers_schema, writer_schema
 from init import db
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
