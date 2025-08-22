@@ -23,6 +23,7 @@ def drop_table():
 
 @database_controller.cli.command("seed")
 def seed_table():
+    
     costumers = [
         Costumer(name="Abby",
                  email="abby@email.com",
@@ -37,17 +38,19 @@ def seed_table():
                  contact="0448135984")
     ]
     db.session.add_all(costumers)
+    db.session.commit()
 
 
 
     orders = [
-        Order(  
-                costumer_id=costumers[0].id,
-                description="Paid. pick up next monday"
-              )
-
+        Order(costumer_id=costumers[0].id,
+              description="Paid. pick up next monday"),
+        
+        Order(costumer_id=costumers[1].id,
+              description="Not paid, will pay when pick up.")
     ]
     db.session.add_all(orders)
+
 
 
     artists = [

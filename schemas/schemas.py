@@ -9,12 +9,14 @@ from models.publisher import Publisher
 
 # Costumer Schema:
 class CostumerSchema(SQLAlchemyAutoSchema):
-    orders = fields.List(fields.Nested("OrderSchema", many=True, exclude=("costumer",)))
+    orders = fields.List(fields.Nested("OrderSchema", exclude=("costumer",)))
     class Meta:
         model = Costumer
         load_instance = True
         include_fk = True
         include_relationships = True
+        fields = ("id","name","email","contact","orders")
+        ordered = True
 
 # Order Schema:
 class OrderSchema(SQLAlchemyAutoSchema):

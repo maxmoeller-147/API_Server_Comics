@@ -11,6 +11,7 @@ def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
     db.init_app(app)
+    app.json.sort_keys = False
     app.register_blueprint(database_controller)
     app.register_blueprint(costumer_bp) 
     app.register_blueprint(artist_bp)

@@ -10,7 +10,12 @@ costumer_bp = Blueprint("costumer", __name__,url_prefix="/costumers")
 # GET ALL COSTUMERS 
 @costumer_bp.route("/")
 def get_costumers():
-    stmt = db.select(Costumer)
+    name = request.args.get("name")
+    if name:
+        stmt = db.select(Costumer).where(Costumer.name == name)
+    else:
+        stmt = db.select(Costumer)
+        
     costumers_list = db.session.scalars(stmt)
     data = costumers_schema.dump(costumers_list)
     

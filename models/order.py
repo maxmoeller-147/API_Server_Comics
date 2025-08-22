@@ -4,9 +4,9 @@ from init import db
 class Order(db.Model):
 	__tablename__ = "orders"
 	id = db.Column(db.Integer, primary_key=True)
-	description = db.Column(db.String(200), nullable=True)
+	description = db.Column(db.String(500), nullable=False)
     # Relationship with Costumer
-	costumer_id = db.Column(db.Integer, db.ForeignKey("costumers.id"))
+	costumer_id = db.Column(db.Integer, db.ForeignKey("costumer.id"))
 	costumer = db.relationship("Costumer", back_populates="orders")
 	
 
