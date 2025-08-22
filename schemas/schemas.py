@@ -26,7 +26,8 @@ class OrderSchema(SQLAlchemyAutoSchema):
         load_instance = True 
         include_fk = True
         include_relationships = True
-        fields = ("id","costumer","description")    
+        fields = ("id","costumer","description") 
+        ordered = True   
 
 # Artist Schema:
 class ArtistSchema(SQLAlchemyAutoSchema):

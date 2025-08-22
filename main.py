@@ -1,11 +1,15 @@
+import os
+
 from flask import Flask
+
 from init import db
 from controllers.cli_controllers import database_controller
 from controllers.costumer_controller import costumer_bp
 from controllers.artist_controller import artist_bp
 from controllers.writer_controller import writer_bp
 from controllers.publisher_controller import publisher_bp
-import os
+from controllers.order_controller import order_bp
+
 
 def create_app():
     app = Flask(__name__)
@@ -17,4 +21,5 @@ def create_app():
     app.register_blueprint(artist_bp)
     app.register_blueprint(writer_bp)
     app.register_blueprint(publisher_bp)
+    app.register_blueprint(order_bp)
     return app
