@@ -9,7 +9,7 @@ from controllers.artist_controller import artist_bp
 from controllers.writer_controller import writer_bp
 from controllers.publisher_controller import publisher_bp
 from controllers.order_controller import order_bp
-
+from controllers.comic_controller import comic_bp
 
 def create_app():
     app = Flask(__name__)
@@ -22,4 +22,5 @@ def create_app():
     app.register_blueprint(writer_bp)
     app.register_blueprint(publisher_bp)
     app.register_blueprint(order_bp)
+    app.register_blueprint(comic_bp)
     return app

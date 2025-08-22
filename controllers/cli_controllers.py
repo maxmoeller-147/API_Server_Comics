@@ -5,6 +5,7 @@ from models.costumer import Costumer
 from models.artist import Artist
 from models.writer import Writer
 from models.publisher import Publisher
+from models.comic import Comic
 
 database_controller = Blueprint("db", __name__)
 
@@ -81,8 +82,23 @@ def seed_table():
         Publisher(name="Marvel Comics")
     ]
     db.session.add_all(publishers)
+    db.session.commit()
 
 
+    comics = [
+        Comic(title="Watchmen",
+              price="40",
+              publisher_id=publishers[0].id,),
+        
+        Comic(title="Superman All Star",
+              price="25",
+              publisher_id=publishers[0].id,),
+        
+        Comic(title="Civil War",
+              price="37",
+              publisher_id=publishers[1].id,),
+    ]
+    db.session.add_all(comics)
 
     
     db.session.commit()

@@ -5,6 +5,7 @@ from models.order import Order
 from models.artist import Artist
 from models.writer import Writer
 from models.publisher import Publisher
+from models.comic import Comic
 
 
 # Costumer Schema:
@@ -43,9 +44,25 @@ class WriterSchema(SQLAlchemyAutoSchema):
 
 # Publisher Schema:
 class PublisherSchema(SQLAlchemyAutoSchema):
-    class Meta:
+    comics = fields.List(fields.Nested("ComicSchema", exclude=("publisher",))) 
+    class Meta:   
         model = Publisher
         load_instance = True
+        include_fk = True
+        include_relationships = True
+        fields = ("id","name","comics")
+        ordered = True
+
+# Comic Schema:
+class ComicSchema(SQLAlchemyAutoSchema):
+    publisher = fields.Nested("PublisherSchema", exclude=("comics",))
+    class Meta:
+        model = Comic
+        load_instance = True
+        include_fk = True
+        include_relationships = True
+        fields = ("id", "title", "price", "publisher")
+        ordered = True
 
 
 
@@ -65,4 +82,7 @@ writers_schema = WriterSchema(many=True)
 
 publisher_schema = PublisherSchema()
 publishers_schema = PublisherSchema(many=True) 
+
+comic_schema = ComicSchema()
+comics_schema = ComicSchema(many=True)
 
