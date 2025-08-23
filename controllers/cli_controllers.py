@@ -7,6 +7,7 @@ from models.writer import Writer
 from models.publisher import Publisher
 from models.comic import Comic
 
+
 database_controller = Blueprint("db", __name__)
 
 
@@ -25,35 +26,31 @@ def drop_table():
 @database_controller.cli.command("seed")
 def seed_table():
     
+
+    # Costumer Seeds
     costumers = [
-        Costumer(name="Abby",
-                 email="abby@email.com",
-                 contact="0123456891",),
+        Costumer(name="Abby", email="abby@email.com", contact="0123456891"),
         
-        Costumer(name="Agus",
-                 email="agus@email.com",
-                 contact="9876543210"),
+        Costumer(name="Agus", email="agus@email.com", contact="9876543210"),
         
-        Costumer(name="Gaby",
-                 email="gaby@email.com",
-                 contact="0448135984")
+        Costumer(name="Gaby", email="gaby@email.com", contact="0448135984")
     ]
     db.session.add_all(costumers)
     db.session.commit()
 
 
 
+    # Order Seeds
     orders = [
-        Order(costumer_id=costumers[0].id,
-              description="Paid. pick up next monday"),
+        Order(costumer_id=costumers[0].id, description="Paid. pick up next monday"),
         
-        Order(costumer_id=costumers[1].id,
-              description="Not paid, will pay when pick up.")
+        Order(costumer_id=costumers[1].id, description="Not paid, will pay when pick up.")
     ]
     db.session.add_all(orders)
 
 
 
+    # Artist Seeds
     artists = [
         Artist(name="Dave Gibbons"),
         
@@ -62,9 +59,10 @@ def seed_table():
         Artist(name="Steve McNiven")
     ]
     db.session.add_all(artists)
-
+    db.session.commit()
    
 
+    # Writer Seeds
     writers = [
         Writer(name="Alan Moore"),
         
@@ -73,9 +71,10 @@ def seed_table():
         Writer(name="Mark Millar")
     ]
     db.session.add_all(writers)
+    db.session.commit()
 
 
-
+    # Publisher Seeds
     publishers = [
         Publisher(name="DC Comics"),
         
@@ -85,22 +84,27 @@ def seed_table():
     db.session.commit()
 
 
+
+    # Comic Seeds
     comics = [
-        Comic(title="Watchmen",
-              price="40",
-              publisher_id=publishers[0].id,),
+        Comic(title="Watchmen", price=40, publisher_id=publishers[0].id,),
         
-        Comic(title="Superman All Star",
-              price="25",
-              publisher_id=publishers[0].id,),
+        Comic(title="Superman All Star", price=25, publisher_id=publishers[0].id,),
         
-        Comic(title="Civil War",
-              price="37",
-              publisher_id=publishers[1].id,),
+        Comic(title="Civil War", price=37, publisher_id=publishers[1].id,),
     ]
     db.session.add_all(comics)
-
-    
     db.session.commit()
 
+
+   # Writer-Comic Relations
+    comics[0].writers.append(writers[0])
+    comics[1].writers.append(writers[1])
+    comics[2].writers.append(writers[2])
+
+    # Artist-Comic Relations
+    comics[0].artists.append(artists[0])
+    comics[1].artists.append(artists[1])
+    comics[2].artists.append(artists[2])
+    db.session.commit()
     print("Tables seeded.")

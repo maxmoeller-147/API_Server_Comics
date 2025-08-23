@@ -19,6 +19,8 @@ class CostumerSchema(SQLAlchemyAutoSchema):
         fields = ("id","name","email","contact","orders")
         ordered = True
 
+
+
 # Order Schema:
 class OrderSchema(SQLAlchemyAutoSchema):
     costumer = fields.Nested("CostumerSchema", exclude=("orders",))
@@ -30,17 +32,32 @@ class OrderSchema(SQLAlchemyAutoSchema):
         fields = ("id","costumer","description") 
         ordered = True   
 
+
+
 # Artist Schema:
 class ArtistSchema(SQLAlchemyAutoSchema):
+    comics = fields.List(fields.Nested(lambda: ComicSchema(exclude=("artists",))))
     class Meta:
         model = Artist
         load_instance = True
+        include_fk = True
+        include_relationships = True
+        fields = ("name","id","comics")
+        ordered = True
+
 
 # Writer Schema:
 class WriterSchema(SQLAlchemyAutoSchema):
+    comics = fields.List(fields.Nested(lambda: ComicSchema(exclude=("writers",))))
     class Meta:
         model = Writer
         load_instance = True
+        include_fk = True
+        include_relationships = True
+        fields = ("name","id","comics")
+        ordered = True
+
+
 
 # Publisher Schema:
 class PublisherSchema(SQLAlchemyAutoSchema):
@@ -50,18 +67,22 @@ class PublisherSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
         include_relationships = True
-        fields = ("id","name","comics")
+        fields = ("name","id","comics")
         ordered = True
+
+
 
 # Comic Schema:
 class ComicSchema(SQLAlchemyAutoSchema):
+    writers = fields.List(fields.Nested(lambda: WriterSchema(exclude=("comics",))))
+    artists = fields.List(fields.Nested(lambda: ArtistSchema(exclude=("comics",))))
     publisher = fields.Nested("PublisherSchema", exclude=("comics",))
     class Meta:
         model = Comic
         load_instance = True
         include_fk = True
         include_relationships = True
-        fields = ("id", "title", "price", "publisher")
+        fields = ("id","price", "title","publisher", "artists","writers")
         ordered = True
 
 
