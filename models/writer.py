@@ -7,6 +7,5 @@ class Writer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
 
-
    # Relationship with Comic (many to many)
     comics = db.relationship("Comic", secondary=comic_writer, back_populates="writers")

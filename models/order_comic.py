@@ -1,5 +1,6 @@
 from init import db
 
+# OrderComic Model
 class OrderComic(db.Model):
     __tablename__ = "order_comics"
 
@@ -8,6 +9,7 @@ class OrderComic(db.Model):
     comic_id = db.Column(db.Integer, db.ForeignKey("comics.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False,default=1)
 
-    # Relationships
+    # Relationship with Order
     order = db.relationship("Order", back_populates="order_comics")
+    # Relationship with Comic
     comic = db.relationship("Comic", back_populates="order_comics")

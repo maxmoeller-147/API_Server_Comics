@@ -2,7 +2,7 @@ from init import db
 from models.comic_artist import comic_artist
 from models.comic_writer import comic_writer
 
-
+# Comics Model
 class Comic(db.Model):
 	__tablename__ = "comics"
 	id = db.Column(db.Integer, primary_key=True)

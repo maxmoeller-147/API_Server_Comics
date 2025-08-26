@@ -4,18 +4,20 @@ from sqlalchemy.exc import IntegrityError, DataError
 from psycopg2 import errorcodes
 
 
+"""
+Flask Error Handlers for validation and errors
 
+"""
 
 def register_error_handlers(app):
     
-
-
+    # Marshmallow validation errors
     @app.errorhandler(ValidationError)
     def handle_validation_error(err):
         return jsonify(err.messages), 400
     
 
-
+    # SQLAlchemy IntegrityError 
     @app.errorhandler(IntegrityError)
     def handle_integrity_error(err):
         if hasattr(err, "orig") and err.orig:
@@ -33,7 +35,7 @@ def register_error_handlers(app):
         return {"message":"Database Integrity error has occured"}, 400
     
 
-
+    # DataError
     @app.errorhandler(DataError)
     def handle_data_error(err):
         return {"message":err.orig.diag.message_primary}, 400
@@ -52,50 +54,4 @@ def register_error_handlers(app):
 
         
        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def validate_name(value, min_length=2):
-
-#     value_striped = value.strip()
-
-#     if not value_striped:
-#         raise ValidationError("Name cannot be empty")
-    
-#     if len(value_striped) < min_length:
-#         raise ValidationError(f"Name must be at least {min_length} characters long")
-    
-#     if not re.match(r'^[A-Za-z ]+$', value_striped):
-#         raise ValidationError("Can Only contain letters and spaces")
-    
-#     return value_striped
-
-
-
-# # Validation Function for ID's
-# def validate_id(value, field_name="Field"):
-#     if value is None or str(value).strip() == "":
-#         raise ValidationError(f"{field_name} cannot be empty")
-#     if not int(value).isdigit():
-#         raise ValidationError(f"{field_name} must be in numbers only")
-#     return int()
-    
-
 

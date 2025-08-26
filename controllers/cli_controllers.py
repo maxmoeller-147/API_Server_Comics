@@ -9,22 +9,22 @@ from models.publisher import Publisher
 from models.comic import Comic
 from models.order_comic import OrderComic
 
-
+# CLI Blueprint
 database_controller = Blueprint("db", __name__)
 
-
+# flask db create
 @database_controller.cli.command("create")
 def create_table():
     db.create_all()
     print("Tables created.")
 
-
+# flask db drop
 @database_controller.cli.command("drop")
 def drop_table():
     db.drop_all()
     print("Tables dropped.")
 
-
+# flask db seed 
 @database_controller.cli.command("seed")
 def seed_table():
     

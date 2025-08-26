@@ -12,9 +12,17 @@ from models.comic import Comic
 from models.order_comic import OrderComic
 
 
+"""
+This module defines serialization schemas for the core models in the project.
+
+"""
+
+
 # Costumer Schema:
 class CostumerSchema(SQLAlchemyAutoSchema):
+    # Hide id in the output
     id = auto_field(load_only=True)
+    #Relationships
     orders = fields.List(fields.Nested("OrderSchema", exclude=("costumer",)))
     class Meta:
         model = Costumer
@@ -24,7 +32,7 @@ class CostumerSchema(SQLAlchemyAutoSchema):
         fields = ("id","name","email","contact","orders")
         ordered = True
 
-
+    # Field Validations
     name = auto_field(validate=[
      Length(min=2, error="Costumer Name is too short.")])
     
@@ -40,7 +48,9 @@ class CostumerSchema(SQLAlchemyAutoSchema):
 
 # Order Schema:
 class OrderSchema(SQLAlchemyAutoSchema):
+    # Hide id in the output
     id = auto_field(load_only=True)
+    # Relationships
     order_comics = fields.List(fields.Nested("OrderComicSchema", exclude=("order",)))
     costumer = fields.Nested("CostumerSchema", exclude=("orders","id",))
     costumer_id = auto_field(required=True)
@@ -66,6 +76,7 @@ class ArtistSchema(SQLAlchemyAutoSchema):
         fields = ("name","id","comics")
         ordered = True
 
+    # Field Validations
     name = auto_field(validate=[
       Length(min=2, error="Artist Name is too short.")])
 
@@ -138,24 +149,31 @@ class OrderComicSchema(SQLAlchemyAutoSchema):
 
 
 # Schemas for single and multiple entries
+# Costumer
 costumer_schema = CostumerSchema()
 costumers_schema = CostumerSchema(many=True)
 
+# Orders
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
+# Artist
 artist_schema = ArtistSchema()
 artists_schema = ArtistSchema(many=True) 
 
+# Writers
 writer_schema = WriterSchema()
 writers_schema = WriterSchema(many=True) 
 
+# Publishers
 publisher_schema = PublisherSchema()
 publishers_schema = PublisherSchema(many=True) 
 
+# Comics
 comic_schema = ComicSchema()
 comics_schema = ComicSchema(many=True)
 
+# OrderComics
 order_comic_schema = OrderComicSchema()
 order_comics_schema = OrderComicSchema(many=True)
 
