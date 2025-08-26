@@ -14,7 +14,8 @@ from models.order_comic import OrderComic
 
 # Costumer Schema:
 class CostumerSchema(SQLAlchemyAutoSchema):
-    orders = fields.List(fields.Nested("OrderSchema", exclude=("costumer","id",)))
+    id = auto_field(load_only=True)
+    orders = fields.List(fields.Nested("OrderSchema", exclude=("costumer",)))
     class Meta:
         model = Costumer
         load_instance = True
@@ -39,6 +40,7 @@ class CostumerSchema(SQLAlchemyAutoSchema):
 
 # Order Schema:
 class OrderSchema(SQLAlchemyAutoSchema):
+    id = auto_field(load_only=True)
     order_comics = fields.List(fields.Nested("OrderComicSchema", exclude=("order",)))
     costumer = fields.Nested("CostumerSchema", exclude=("orders","id",))
     costumer_id = auto_field(required=True)
@@ -54,6 +56,7 @@ class OrderSchema(SQLAlchemyAutoSchema):
 
 # Artist Schema:
 class ArtistSchema(SQLAlchemyAutoSchema):
+    id = auto_field(load_only=True)
     comics = fields.List(fields.Nested(lambda: ComicSchema(exclude=("artists","id",))))
     class Meta:
         model = Artist
@@ -70,6 +73,7 @@ class ArtistSchema(SQLAlchemyAutoSchema):
 
 # Writer Schema:
 class WriterSchema(SQLAlchemyAutoSchema):
+    id = auto_field(load_only=True)
     comics = fields.List(fields.Nested(lambda: ComicSchema(exclude=("writers","id",))))
     class Meta:
         model = Writer
@@ -86,6 +90,7 @@ class WriterSchema(SQLAlchemyAutoSchema):
 
 # Publisher Schema:
 class PublisherSchema(SQLAlchemyAutoSchema):
+    id = auto_field(load_only=True)
     comics = fields.List(fields.Nested("ComicSchema", exclude=("publisher","id",))) 
     class Meta:   
         model = Publisher
@@ -101,6 +106,7 @@ class PublisherSchema(SQLAlchemyAutoSchema):
 
 # Comic Schema:
 class ComicSchema(SQLAlchemyAutoSchema):
+    id = auto_field(load_only=True)
     order_comics = fields.List(fields.Nested("OrderComicSchema", exclude=("comic",)))
     writers = fields.List(fields.Nested(lambda: WriterSchema(exclude=("comics",))))
     artists = fields.List(fields.Nested(lambda: ArtistSchema(exclude=("comics",))))
@@ -118,6 +124,7 @@ class ComicSchema(SQLAlchemyAutoSchema):
 
 # Order_Comic Schema:
 class OrderComicSchema(SQLAlchemyAutoSchema):
+    id = auto_field(load_only=True)
     comic = fields.Nested("ComicSchema", exclude=("order_comics",))
     order = fields.Nested("OrderSchema", exclude=("order_comics",))
     class Meta:
