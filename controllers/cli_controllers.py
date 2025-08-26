@@ -1,4 +1,5 @@
 from flask import Blueprint
+
 from init import db
 from models.order import Order
 from models.costumer import Costumer
@@ -6,6 +7,7 @@ from models.artist import Artist
 from models.writer import Writer
 from models.publisher import Publisher
 from models.comic import Comic
+from models.order_comic import OrderComic
 
 
 database_controller = Blueprint("db", __name__)
@@ -94,6 +96,17 @@ def seed_table():
         Comic(title="Civil War", price=37, publisher_id=publishers[1].id,),
     ]
     db.session.add_all(comics)
+    db.session.commit()
+
+
+
+    #Order Comics Seeds
+    order_comics = [
+        OrderComic(order_id=orders[0].id, comic_id=comics[1].id, quantity=2),
+
+        OrderComic(order_id=orders[1].id, comic_id=comics[0].id, quantity=5),
+    ]
+    db.session.add_all(order_comics)
     db.session.commit()
 
 

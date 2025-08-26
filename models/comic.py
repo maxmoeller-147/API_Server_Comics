@@ -2,6 +2,7 @@ from init import db
 from models.comic_artist import comic_artist
 from models.comic_writer import comic_writer
 
+
 class Comic(db.Model):
 	__tablename__ = "comics"
 	id = db.Column(db.Integer, primary_key=True)
@@ -17,3 +18,6 @@ class Comic(db.Model):
 
 	# Relationship with Writer (many to many)
 	writers = db.relationship("Writer", secondary=comic_writer, back_populates="comics")
+
+	# Relationship with Orders (many to many)
+	order_comics = db.relationship("OrderComic", back_populates="comic", cascade="all, delete-orphan")

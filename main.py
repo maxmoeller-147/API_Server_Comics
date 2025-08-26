@@ -10,6 +10,8 @@ from controllers.writer_controller import writer_bp
 from controllers.publisher_controller import publisher_bp
 from controllers.order_controller import order_bp
 from controllers.comic_controller import comic_bp
+from controllers.order_comic_controller import order_comic_bp
+from validators.validators import register_error_handlers
 
 def create_app():
     app = Flask(__name__)
@@ -23,4 +25,6 @@ def create_app():
     app.register_blueprint(publisher_bp)
     app.register_blueprint(order_bp)
     app.register_blueprint(comic_bp)
+    app.register_blueprint(order_comic_bp)
+    register_error_handlers(app)
     return app

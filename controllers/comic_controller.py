@@ -11,10 +11,16 @@ from init import db
 
 comic_bp = Blueprint("comic", __name__,url_prefix="/comics")
 
+
 # GET ALL COMICS 
 @comic_bp.route("/")
 def get_comics():
-    stmt = db.select(Comic)  
+    name = request.args.get("name")
+    if name:
+        stmt = db.select(Comic).where(Comic.name == name)
+    else:    
+        stmt = db.select(Comic)  
+    
     comics_list = db.session.scalars(stmt)
     data = comics_schema.dump(comics_list)
     
@@ -22,7 +28,8 @@ def get_comics():
         return jsonify(data)
     elif data == []:
         return {"message":"No comics found."}, 404
-    
+
+
 
 
 # GET COMIC BY ID
@@ -58,11 +65,10 @@ def delete_comic(comic_id):
 @comic_bp.route("/",methods = ["POST"])
 def create_a_comic():
     body_data = request.get_json()
+
     if not body_data:
         return{"message":"Request Body must be included"}, 400
         
-
-
     # Validate Price    
     price_input = body_data.get("price")
     try:
@@ -70,11 +76,8 @@ def create_a_comic():
     except (TypeError,ValueError):
             return {"message":"Price must be an integer."}, 400
     
-
     # Create Comic
     new_comic = Comic(title = body_data.get("title"), price = price_input, publisher_id = body_data.get("publisher_id"))
-
-    
 
     # If Writer is provided 
     writer_ids = body_data.get("writer_ids", [])
@@ -83,8 +86,6 @@ def create_a_comic():
         if writer:
             new_comic.writers.append(writer)
 
-
-
     # If Artist is provided 
     artist_ids = body_data.get("artist_ids", [])
     for artist_id in artist_ids:
@@ -92,26 +93,15 @@ def create_a_comic():
         if artist:
             new_comic.artists.append(artist)
 
-
-
-    # Error Handle
-    try:
-        db.session.add(new_comic)
-        db.session.commit()
-        return jsonify(comic_schema.dump(new_comic)), 201
+   
     
-    except IntegrityError as err:
-        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"message":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
-        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return {"message":"Title has to be unique."}, 400
-        else:
-            return {"message":"Unexpected error has ocurred."}, 400
+    db.session.add(new_comic)
+    db.session.commit()
+    return jsonify(comic_schema.dump(new_comic)), 201
+    
+
         
         
-
-
-
 
 
 
@@ -129,7 +119,6 @@ def update_comic(comic_id):
         if not body_data:
             return {"message":"Request body must be included"}, 400    
 
-       
         # Price Validation
         price_input = body_data.get("price")
         if price_input is not None:
@@ -138,15 +127,12 @@ def update_comic(comic_id):
             except (TypeError, ValueError):
                 return {"message": "Price must be an integer."}, 400
         
-       
         # Update Publisher
         comic.publisher_id = body_data.get("publisher_id") or comic.publisher_id
         
-       
         # Update Title
         comic.title = body_data.get("title") or comic.title
-        
-             
+            
         # Update Writer
         writer_ids = body_data.get("writer_ids")
         if writer_ids is not None:
@@ -155,8 +141,6 @@ def update_comic(comic_id):
                 writer = db.session.get(Writer, writer_id)
                 if writer:
                     comic.writers.append(writer)
-
-
 
         # Update Artist
         artist_ids = body_data.get("artist_ids")

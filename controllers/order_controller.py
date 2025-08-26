@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
+from marshmallow import ValidationError
 
 from init import db
 from models.order import Order
@@ -12,7 +13,12 @@ order_bp = Blueprint("order",__name__, url_prefix="/orders")
 # GET ALL ORDERS 
 @order_bp.route("/")
 def get_orders():
-    stmt = db.select(Order)  
+    id = request.args.get("id")
+    if id:
+        stmt = db.select(Order).where(Order.id == id)
+    else:
+        stmt = db.select(Order)  
+    
     orders_list = db.session.scalars(stmt)
     data = orders_schema.dump(orders_list)
     
@@ -21,6 +27,7 @@ def get_orders():
     elif data == []:
         return {"message":"No orders found."}, 404
     
+
 
 
 # GET ORDER BY ID
@@ -36,32 +43,13 @@ def get_a_order(order_id):
     
 
 
-# POST: CREATE A ORDER
-@order_bp.route("/",methods = ["POST"])
-def create_a_order():
-    try:
-        body_data = request.get_json()
-        new_order = Order(
-            costumer_id = body_data.get("costumer_id"),
-            description = body_data.get("description")
-        )
-        db.session.add(new_order)
-        db.session.commit()
-
-        return jsonify(order_schema.dump(new_order)), 201
-    except IntegrityError as err:
-        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"message":f"Required field {err.orig.diag.column_name} cannot be null."}, 400
-        else:
-            return {"message":"Unexpected error has ocurred."}, 400
-        
-
 
 # DELETE: id
 @order_bp.route("/<int:order_id>", methods=["DELETE"])
 def delete_order(order_id):
     stmt = db.select(Order).where(Order.id == order_id)
     order = db.session.scalar(stmt)
+    
     if order:
         db.session.delete(order)
         db.session.commit()
@@ -71,16 +59,34 @@ def delete_order(order_id):
     
 
 
+    
+# POST: CREATE A ORDER
+@order_bp.route("/",methods = ["POST"])
+def create_a_order():
+  
+    body_data = request.get_json()
+    new_order = order_schema.load(body_data, session = db.session)
+    db.session.add(new_order)
+    db.session.commit()
+    return jsonify(order_schema.dump(new_order)), 201
+    
+
+
+
 # UPDATE: /orders/id
 @order_bp.route("/<int:order_id>", methods=["PUT","PATCH"])
 def update_order(order_id):
     stmt = db.select(Order).where(Order.id == order_id)
     order = db.session.scalar(stmt)
-    if order:
+    
+    if not order:
+        return {"message":f"Order with id {order_id} does not exist."}, 404
+    
+    else:
         body_data = request.get_json()
-        order.description = body_data.get("description") or order.description
-        order.costumer_id = body_data.get("costumer_id") or order.costumer_id
+        order = order_schema.load(body_data,instance = order, session = db.session, partial= True)
         db.session.commit()
         return jsonify(order_schema.dump(order))
-    else:
-        return {"message":f"Order with id {order_id} does not exist."}, 404
+    
+
+       
