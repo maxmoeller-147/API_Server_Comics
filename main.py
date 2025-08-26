@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from dotenv import load_dotenv
 
 from init import db
 from controllers.cli_controllers import database_controller
@@ -17,6 +18,9 @@ from validators.validators import register_error_handlers
 """
 Flask Application: configures DB, error handlers and blueprints.
 """
+
+
+load_dotenv()
 
 # Create and configure the app instance
 def create_app():
