@@ -2,6 +2,15 @@
 Comics Store API  Description: This API for a comic book store lets you manage comics, customers, and orders. 
 
 
+
+## WHY I CHOSE POSTGRESQL?
+
+* For this project, I decided to use PostgreSQL as my database system. It's a realiable relational database that organizes data into tables with clear connections. It's not only the one system that I can manage easier but it is also perfect for a comic store to manage all the costumer, orders, comics and puyblishers and collect information of the comics. 
+Compared to the others options, Postgresql seems to be the best in terms of strict data integrity and its ability to handle complex queries.
+While MySQL is also relational and widely used, PostgreSQL offers more advanced features and stricter rules, making it a better choice for applications that need precision. SQLite is a lightweight and easy for small apps, but it's not great for multi-user environments or production level systems. On the other hand, NoSQL databases like MongoDB are great for unstructured or highly flexible data, but the don't enforce relationships as strongly as relational systems, which is crucial for our use case. In summary, PostgreSQL strikes the right balance between stabilty, scalability and relational integrity, making it the ideal choice for this project.
+
+
+
 ## HOW TO SET AND START
 
 
