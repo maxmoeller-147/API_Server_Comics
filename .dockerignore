@@ -12,6 +12,8 @@ __pycache__/
 .env
 .flaskenv
 
-# Editor
+# Git and Editor
+.git 
+.gitignore
 .vscode/
 .idea/

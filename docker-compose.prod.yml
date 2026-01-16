@@ -1,0 +1,41 @@
+services:
+  db: 
+    image: postgres:16-alpine
+
+    container_name: db-comics-prod
+    
+    environment:
+      POSTGRES_DB: comics_store
+      POSTGRES_USER: comics_user_prod
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    
+    volumes:
+      - comics_data_db_prod:/var/lib/postgresql/data
+    
+
+  api:
+    image: comics-api-server:1.0-prod
+    
+    build:
+      context: .
+    
+    container_name: comics-api-prod
+    
+    depends_on:
+      db:
+        condition: service_started
+    
+    environment:
+      FLASK_APP: main:create_app
+      FLASK_ENV: production
+      FLASK_DEBUG: "0"
+      DATABASE_URI:  postgresql+psycopg2://comic_dev:${POSTGRES_PASSWORD}@db:5432/comic_store
+
+    ports:
+      - "8080:8080"
+    
+    command: ["gunicorn", "-b", "0.0.0.0:8080", "main:create_app()"]
+
+volumes:
+  comics_data_db_prod:
+
