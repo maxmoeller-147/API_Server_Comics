@@ -13,6 +13,7 @@ from controllers.order_controller import order_bp
 from controllers.comic_controller import comic_bp
 from controllers.order_comic_controller import order_comic_bp
 from validators.validators import register_error_handlers
+from controllers.health_controller import health_bp
 
 
 """
@@ -46,6 +47,7 @@ def create_app():
     app.register_blueprint(order_bp)
     app.register_blueprint(comic_bp)
     app.register_blueprint(order_comic_bp)
+    app.register_blueprint(health_bp)
 
     # Centralized Error Handler
     register_error_handlers(app)
