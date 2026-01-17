@@ -1,7 +1,6 @@
 
 # Python Virtual Environment
 .venv/
-venv/
 
 # Python Cache
 __pycache__/
@@ -13,7 +12,10 @@ __pycache__/
 .flaskenv
 
 # Git and Editor
-.git 
-.gitignore
-.vscode/
-.idea/
+.git/
+
+# Logs
+*.log
+
+#MacOS
+.DS_Store

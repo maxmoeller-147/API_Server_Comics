@@ -16,7 +16,7 @@ services:
       - "5432:5432"
     
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U comic_dev -d comic_store"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 10
