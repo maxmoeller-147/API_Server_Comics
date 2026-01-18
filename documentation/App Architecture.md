@@ -19,3 +19,5 @@ More Info on:
 - [Leave your Feedback!](./documentation/Feedback.md)
 
 ## Application Architecture 
+
+![Application Architecture Diagram](images/app_architecture.png)
