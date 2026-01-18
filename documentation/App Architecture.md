@@ -7,6 +7,7 @@
 3. [Database Architecture](#database-architecture)
 4. [CI/CD Pipeline](#cicd-pipeline)
 5. [Containerised Architecture](#containerized-architecture)
+
 6. [Application Overview](#application-overview)
 
 ## Project Summary
@@ -23,13 +24,13 @@ More Info on:
 
 ![Application Architecture Diagram](images/app_architecture.png)
 
-A Flask Application is the core of this project, structured and initialilised throught a factory function named create_app(), instead of a global Flask instance. This allows configuration to be dynamically applied depending on the environment in which the application is running and provides significant flexibility, as it enables the same code to be reused for development, testing, and production environments without modification.
+A Flask Application is the core of this project, structured and initialised throught a factory function named create_app(), instead of a global Flask instance. This allows configuration to be dynamically applied depending on the environment in which the application is running and provides significant flexibility, as it enables the same code to be reused for development, testing, and production environments without modification.
 
 main.py imports and executes this function when the application starts. Then the function creates the Flask application instance, loads environment variables, configures the database connection, registers error handlers, and attaches all relevant blueprints.
 
 The structure of the API is organised into layers. The presentation layer is implemented through a series of Flask Blueprints, each responsible for a specific domain entity. For example, there are dedicated controllers for customers, comics, orders, artists, writers, and publishers. These controllers define the HTTP routes that external clients interact with, and they handle tasks such as receiving requests, validating input data, interacting with the database, and returning formatted JSON responses.
 
-Validation is handled using Marshmallow schemas and custom validator functions. All incoming data is checked before any database operation is performed. This ensures that invalid data cannot corrupt the system and that consistent error messages are returned to API consumers if any errors. Centralised error handling strengthens this layer by capturing and formatting exceptions in a industry standart way.
+Validation is handled using Marshmallow schemas and custom validator functions. All incoming data is checked before any database operation is performed. This ensures that invalid data cannot corrupt the system and that consistent error messages are returned to API consumers if any errors. Centralised error handling strengthens this layer by capturing and formatting exceptions in an industry standart way.
 
 The data access layer is built using SQLAlchemy, all database models are defined as Python classes inside the models directory and represent the entities of the comic store. These models define relationships between tables, enforce constraints, and provide an object oriented way to interact with PostgreSQL. The database instance itself has a modular design and is initialised in a separate module and injected into the application by the factory function.
 
@@ -53,7 +54,7 @@ As well as a junction table to represent the many-to-many relationship between o
 
 Each entity has defined relationships. For instance, a publisher can publish many comics, a customer can place many orders, and a single order can contain multiple comics. Artists and writers are associated with the comics they helped create, enabling the system to represent real world scenarios. This relational model allows the API to support realistic operations such as retrieving a customer’s order history, listing all comics from a specific publisher, or determining which comics are included in a particular order.
 
-The use of PostgreSQL as the database engine ensures data integrity, transactional reliability, and scalability. All interactions with the database happens through SQLAlchemy, which abstracts raw SQL into a higher level object relational mapping layer. This design choice makes the application easier to maintain and reduces the risk of database-related bugs.
+The use of PostgreSQL as the database engine ensures data integrity, transactional reliability, and scalability. All interactions with the database happen through SQLAlchemy, which abstracts raw SQL into a higher level object relational mapping layer. This design choice makes the application easier to maintain and reduces the risk of database-related bugs.
 
 ## CI/CD Pipeline Architecture 
 
@@ -89,7 +90,7 @@ The database container runs PostgreSQL 16 using the lightweight Alpine image. A 
 
 #### Environment Variables:
 
-This variables control all configuration, making the project easy to deploy the same system on different operating systems with minimal configurations. 
+These variables control all configuration, making the project easy to deploy the same system on different operating systems with minimal configurations. 
 Sensitive information such as database credentials and connection strings are never hardcoded into the source code. Instead, they are injected into containers at runtime, allowing secure and flexible configuration.
 
 ## Interaction between Components
