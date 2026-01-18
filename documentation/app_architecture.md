@@ -7,8 +7,8 @@
 3. [Database Architecture](#database-architecture)
 4. [CI/CD Pipeline](#cicd-pipeline)
 5. [Containerised Architecture](#containerized-architecture)
-
-6. [Application Overview](#application-overview)
+6. [Interaction between Components](#interaction-between-components)
+7. [Application Overview](#application-overview)
 
 ## Project Summary
 The Comics API Server is a containerised web application that provides a RESTful API that allows users to manage the operations of a comic store, such as comics, customers, orders, artists, writers, and publishers. The project was developed using Python and Flask, with PostgreSQL as the database engine, and is containerised and executed using Docker. In addition to the core application, a continuous integration pipeline was implemented using GitHub Actions to automate building, testing, and validation.
@@ -16,9 +16,9 @@ The Comics API Server is a containerised web application that provides a RESTful
 This documentation explains the architecture of the application through diagrams and descriptions that illustrate how each component of the system interacts.
 
 More Info on:  
-
-- [Technical Readme](./README.md)
-- [Leave your Feedback!](./documentation/Feedback.md)
+- [How to Run with Docker](./docker_guide.md)
+- [Technical Readme](../README.md)
+- [Leave your Feedback!](./Feedback.md)
 
 ## Application Architecture 
 

@@ -1,7 +1,19 @@
+
 # API_Server_Comics
-Comics Store API  Description: This API for a comic book store lets you manage comics, customers, and orders. 
+
+![Banner](./documentation/images/comics_banner.png)
+
+The Comics API Server is a containerised RESTful web application designed to manage the operations of a comic store. It allows users to create, retrieve, update, and manage key business entities such as comics, customers, orders, artists, writers, and publishers. The application is built using Flask and PostgreSQL, follows a modular architecture, and is fully deployed using Docker with an automated CI/CD pipeline for building and validating the system.
 
 
+
+## Table of Contents
+
+1. [Why I Choose PostgreSQL](#why-i-chose-postgresql)
+2. [How To Set and Start](#how-to-set-and-start)
+3. [API Endpoints](#api-endpoints)
+4. [References](#references)
+4. [More about the App](#more-about-the-app)
 
 ## WHY I CHOSE POSTGRESQL?
 
@@ -14,14 +26,14 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 ## HOW TO SET AND START
 
 
-1. CREATE A .env FILE with a connection to postgres (you can choose your DB. this project use this one):
+####  1. CREATE A .env FILE with a connection to postgres (you can choose your DB. this project use this one):
 	
 	- [DATABASE_URI=postgresql+psycopg2://comic_dev:123456@localhost:5432/comic_store]
 
 
 
 
-2. Ensure that a local database exist by making one in postgres shell:
+####  2. Ensure that a local database exist by making one in postgres shell:
 	
 	- enter the postgres shell
 		- MacOS: run the `psql` command
@@ -36,7 +48,7 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 
 
 
-3. Ensure that a postgres shell user that has permissions to work with your database:
+#### 3. Ensure that a postgres shell user that has permissions to work with your database:
 	
 	- run `CREATE USER comic_dev WITH PASSWORD '123456';`
 	
@@ -47,16 +59,16 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 
 
 
-4. Exit the postgres shell with `\q`.
+#### 4. Exit the postgres shell with `\q`.
 
 
 
 
-5. create a .flaskenv file and define: FLASK_APP=main.
+#### 5. create a .flaskenv file and define: FLASK_APP=main.
 
 
 
-6. Make a venv!:
+#### 6. Make a venv!:
 	
 	- run `python3 -m venv .venv` to make the venv
 	
@@ -71,14 +83,14 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 
 
 
-7. Install dependencies from the project within the activated venv:
+#### 7. Install dependencies from the project within the activated venv:
 	
 	- run `pip install -r ./requirements.txt`
 
 
 
 
-8. Ensure that the flask app database exists and has any seed data:
+#### 8. Ensure that the flask app database exists and has any seed data:
 
 	- check the source code for any CLI commands, e.g. `./controllers/cli_controller.py`
 
@@ -92,7 +104,7 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 
 
 
-9. OPTIONAL: set flask debug and a manual PORT value into `.flaskenv`:
+#### 9. OPTIONAL: set flask debug and a manual PORT value into `.flaskenv`:
 	- `FLASK_DEBUG=1`
 	- `FLASK_RUN_PORT=8080`
 
@@ -181,16 +193,33 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 
 - DISCLAIMER: Chatgpt was used to make this table look nice but all the contents were made by Max Acosta and the data of the routes was extracted using command `flask routes`.
 
-REFERENCES: 
-    PostgresSQL: Documentation [postgresql.org/docs/current/errcodes-appendix.html]
 
-    (Help me with the validations)
-    Docs.Python: [https://docs.python.org/3/library/re.html]
+## REFERENCES: 
 
-    Marshmallow: [https://marshmallow.readthedocs.io/en/stable/marshmallow.validate.html]
+The following official documentation and resources were used throughout the development of this project:
 
-    w3schools: https://www.w3schools.com/python/ref_func_len.asp
+- PostgreSQL Documentation – Error codes and database reference
+https://www.postgresql.org/docs/current/errcodes-appendix.html
+
+- Python Documentation – Regular expressions and validation utilities
+https://docs.python.org/3/library/re.html
+
+- Marshmallow Documentation – Data validation and schema management
+https://marshmallow.readthedocs.io/en/stable/marshmallow.validate.html
+
+- W3Schools Python Reference – Built-in functions and utilities
+https://www.w3schools.com/python/ref_func_len.asp
+
+- Docker Documentation – Containerisation concepts and setup
+https://docs.docker.com/get-started/
+
+- GitHub Actions Documentation – Workflow creation and CI/CD automation
+https://docs.github.com/en/actions/how-tos/write-workflows
 
 
+## More about the App:  
+- [How to Run with Docker](./documentation/docker_guide.md)
+- [Application Architecture](./documentation/app_architecture.md)
+- [Leave your Feedback!](./documentation/Feedback.md)
 
-Project Comic_Store API by Max Acosta. Thanks!
+Project Comic_Store API by MaxMoeller. Thanks!
