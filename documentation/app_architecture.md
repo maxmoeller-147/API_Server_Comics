@@ -70,7 +70,7 @@ This automated workflow ensures that the project remains in a working state at a
 
 ## Containerised Architecture 
 
-![Containerised Architecture Diagram](images/container_architecture.png)
+![Containerised Architecture Diagram](images/container_Architecture.png)
 
 The system is composed of two main containers: one running the Flask API and the other running PostgreSQL. These containers are orchestrated using Docker Compose, which defines how the services are built, configured, and connected.
 
