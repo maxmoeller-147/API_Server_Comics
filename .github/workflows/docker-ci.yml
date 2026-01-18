@@ -1,6 +1,5 @@
 # NAme for the Github Actions tab
 name: Docker CI
-
 # Defines when the workflow should run
 on:
   # Run whenever code is pushed to main branch  

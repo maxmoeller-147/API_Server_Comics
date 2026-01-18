@@ -1,20 +1,28 @@
+# Main section where the app containers are defined
 services:
+  # Definition of PostgreSQL database Container
   db: 
+    # Docker image for this service
     image: postgres:16-alpine
-
+    
+    # Custom name for the container
     container_name: db-comics-dev
     
+    # Environment variables passed to the container during initialization
     environment:
       POSTGRES_DB: comics_store
       POSTGRES_USER: comics_user_dev
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
     
+    # Ensures data is not lost when the container is removed
     volumes:
       - comics_data_db_dev:/var/lib/postgresql/data
     
+    # Port mapping exposes postgreSQL to the host machine
     ports:
       - "5432:5432"
     
+    # Healthcheck to verify if PostgreSQL is ready
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
@@ -22,30 +30,44 @@ services:
       retries: 10
 
 
+  # Definition of the main API Container
   api:
+    # Docker image for this service
     image: comics-api-server:1.0-dev
     
+    # Build configuration for creating the docker image
     build:
+      # Indicates that the dockerfile is located in the current directory
       context: .
     
+    # Custom name for the container
     container_name: comics-api-dev
     
+    # Defines dependency on the database, the API will not start until the database is healthy
     depends_on:
       db:
         condition: service_healthy
     
+    # Environment variables required by the Flask App
     environment:
+      # Tells Flask which module and function to run
       FLASK_APP: main:create_app
+      # Sets Flask to run in development mode
       FLASK_ENV: development
+      # Enables debug mode
       FLASK_DEBUG: 1
+      # Database connection string used by the API
       DATABASE_URI: postgresql+psycopg2://comics_user_dev:${POSTGRES_PASSWORD:-123456}@db:5432/comics_store
 
-
+    # Port mapping for the API service
     ports:
       - "8080:8080"
     
+    # Command executed when the container starts, runs the Flask development server
     command: ["flask", "run", "--host=0.0.0.0", "--port=8080"]
 
+# Global volumes definition, Docker creates these volumes automatically if they do not exist
 volumes:
+  # Volume used by PostgreSQL to store persistent database data
   comics_data_db_dev:
 
