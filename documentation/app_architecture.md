@@ -5,8 +5,8 @@
 1. [Project Summary](#project-summary)
 2. [Application Architecture](#application-architecture)
 3. [Database Architecture](#database-architecture)
-4. [CI/CD Pipeline](#cicd-pipeline)
-5. [Containerised Architecture](#containerized-architecture)
+4. [CI/CD Pipeline Architecture](#cicd-pipeline-architecture)
+5. [Containerised Architecture](#containerised-architecture)
 6. [Interaction between Components](#interaction-between-components)
 7. [Application Overview](#application-overview)
 

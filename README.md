@@ -199,22 +199,28 @@ While MySQL is also relational and widely used, PostgreSQL offers more advanced 
 The following official documentation and resources were used throughout the development of this project:
 
 - PostgreSQL Documentation – Error codes and database reference
-https://www.postgresql.org/docs/current/errcodes-appendix.html
+
+	https://www.postgresql.org/docs/current/errcodes-appendix.html
 
 - Python Documentation – Regular expressions and validation utilities
-https://docs.python.org/3/library/re.html
+
+	https://docs.python.org/3/library/re.html
 
 - Marshmallow Documentation – Data validation and schema management
-https://marshmallow.readthedocs.io/en/stable/marshmallow.validate.html
+
+	https://marshmallow.readthedocs.io/en/stable/marshmallow.validate.html
 
 - W3Schools Python Reference – Built-in functions and utilities
-https://www.w3schools.com/python/ref_func_len.asp
+
+	https://www.w3schools.com/python/ref_func_len.asp
 
 - Docker Documentation – Containerisation concepts and setup
-https://docs.docker.com/get-started/
+
+	https://docs.docker.com/get-started/
 
 - GitHub Actions Documentation – Workflow creation and CI/CD automation
-https://docs.github.com/en/actions/how-tos/write-workflows
+
+	https://docs.github.com/en/actions/how-tos/write-workflows
 
 
 ## More about the App:  
