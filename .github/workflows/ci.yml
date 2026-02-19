@@ -57,7 +57,20 @@ jobs:
             -e POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
             -e POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
             -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
+            --health-cmd="pg_isready -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }}" \
+            --health-interval=1s --health-timeout=5s --health-retries=30 \
             postgres:16-alpine
+
+      - name: Wait for health check
+        run: |
+          for i in {1..30}; do
+            status=$(docker inspect -f '{{.State.Health.Status}}' db)
+            echo "db health: $status"
+            [ "$status" = "healthy" ] && exit 0
+            sleep 1
+          done
+          docker logs db
+          exit 1
 
       - name: Init DB schema (create_all)
         run: |
