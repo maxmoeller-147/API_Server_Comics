@@ -63,6 +63,7 @@ jobs:
         run: |
           docker run --rm --network ci-net \
           -e DATABASE_URI="${{ secrets.DATABASE_URI }}" \
+          -e PYTHONPATH=/app \
           comics-api-server:ci \
           python scripts/init_db.py
 
