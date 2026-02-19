@@ -85,7 +85,7 @@ jobs:
         run: |
           mkdir -p reports
           BASE_URL="${BASE_URL}" pytest -q \
-          --junitxml+reports/junit.xml \
+          --junitxml=reports/junit.xml \
           --cov=. --cov-report=xml:reports/coverage.xml
 
       # Step 10 - 
