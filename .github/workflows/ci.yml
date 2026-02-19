@@ -59,6 +59,14 @@ jobs:
             -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
             postgres:16-alpine
 
+      - name: Init DB schema (create_all)
+        run: |
+          docker run --rm --network ci-net \
+          -e DATABASE_URI="${{ secrets.DATABASE_URI }}" \
+          comics-api-server:ci \
+          python scripts/init_db.py
+
+
       # Step 5 - Run the API container using the DATABASE_URI secret
       - name: Start API 
         run: |
