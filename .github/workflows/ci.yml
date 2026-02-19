@@ -1,5 +1,5 @@
 # NAme for the Github Actions tab
-name: Docker CI
+name: CI - Build and Test
 # Defines when the workflow should run
 on:
   # Run whenever code is pushed to main branch  
@@ -8,6 +8,8 @@ on:
   # Run on pull requests in main   
   pull_request:
     branches: ["main"]
+
+  workflow_dispatch: {}
 
 
 # Define the jobs that will run
@@ -48,7 +50,7 @@ jobs:
           -e FLASK_APP="main:create_app" \
           comics-api-server:ci
 
-      # Step - Perform a simple test to confirm the API is running  
+      # Step 6 - Perform a simple test to confirm the API is running  
       - name: Wait for API and test HTTP response
         run: |
           for i in {1..20}; do
@@ -65,7 +67,44 @@ jobs:
           docker logs db || true
           exit 1
 
-      # Step 7 - Clean up containers and network
+      # Step 7 -
+      - name: Set Python 
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Step 8 -
+      - name: Install dependencies for testing
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov requests
+
+      # Step 9 - 
+      - name: Run pytest with JUnit and coverage
+        run: |
+          mkdir -p reports
+          BASE_URL="${BASE_URL}" pytest -q \
+          --junitxml+reports/junit.xml \
+          --cov=. --cov-report=xml:reports/coverage.xml
+
+      # Step 10 - 
+      - name: Upload the reports of the tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/
+      
+      # Step 11 - 
+      - name: Upload container logs
+        if: always()
+        run: |
+          mkdir -p reports/logs
+          docker logs api > reports/logs/api.log 2>&1 || true
+          docker logs db > reports/logs/db.log 2>&1 || true
+          
+      # Step 12 - Clean up containers and network
       - name: Cleanup
         if: always()
         run: |
