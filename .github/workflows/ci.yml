@@ -44,32 +44,6 @@ jobs:
             -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
             postgres:16-alpine
 
-      - name: Debug which DB/user are being used (no secrets printed)
-        run: |
-          test -n "${{ secrets.POSTGRES_DB }}" && echo "POSTGRES_DB secret is set" || echo "POSTGRES_DB secret is EMPTY"
-          test -n "${{ secrets.POSTGRES_USER }}" && echo "POSTGRES_USER secret is set" || echo "POSTGRES_USER secret is EMPTY"
-          test -n "${{ secrets.POSTGRES_PASSWORD }}" && echo "POSTGRES_PASSWORD secret is set" || echo "POSTGRES_PASSWORD secret is EMPTY"
-          test -n "${{ secrets.DATABASE_URI }}" && echo "DATABASE_URI secret is set" || echo "DATABASE_URI secret is EMPTY"
-
-
-      - name: Wait for Postgres to be ready
-        run: |
-          for i in {1..30}; do
-            if docker exec db pg_isready -U "${{ secrets.POSTGRES_USER }}" -d "${{ secrets.POSTGRES_DB }}" >/dev/null 2>&1; then
-              echo "Postgres is ready"
-              break
-            fi
-            echo "Waiting for Postgres... ($i)"
-            sleep 2
-          done
-
-          docker exec db pg_isready -U "${{ secrets.POSTGRES_USER }}" -d "${{ secrets.POSTGRES_DB }}"
-
-      - name: Debug Postgres DB list
-        run: |
-          docker exec db psql -U "${{ secrets.POSTGRES_USER }}" -d "${{ secrets.POSTGRES_DB }}" -c "\l"
-
-
       # Step 5 - Run the API container using the DATABASE_URI secret
       - name: Start API 
         run: |
@@ -116,14 +90,6 @@ jobs:
           --junitxml=reports/junit.xml \
           --cov=. --cov-report=xml:reports/coverage.xml
 
-      # Step 10 - 
-      - name: Upload the reports of the tests
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-reports
-          path: reports/
-      
       # Step 11 - 
       - name: Upload container logs
         if: always()
@@ -131,6 +97,14 @@ jobs:
           mkdir -p reports/logs
           docker logs api > reports/logs/api.log 2>&1 || true
           docker logs db > reports/logs/db.log 2>&1 || true
+
+      # Step 10 - 
+      - name: Upload the reports of the tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/
           
       # Step 12 - Clean up containers and network
       - name: Cleanup
