@@ -33,6 +33,21 @@ jobs:
       - name: Build_API_image
         run: | 
           docker build -t comics-api-server:ci .
+
+      # Step Extra
+      - name: Debug secrets (check hidden characters)
+        run: |
+          python - <<'PY'
+          import os
+          for k in ["POSTGRES_DB","POSTGRES_USER","DATABASE_URI"]:
+            v = os.environ.get(k,"")
+            print(k, repr(v))
+          PY
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          DATABASE_URI: ${{ secrets.DATABASE_URI }}
+         
           
       # Step 4 - Create a docker network for testing and run postgreSQL container using secrets from Github
       - name: Start Postgres container for testing
