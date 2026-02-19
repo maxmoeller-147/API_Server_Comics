@@ -44,6 +44,14 @@ jobs:
             -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
             postgres:16-alpine
 
+
+
+      - name: Debug DB container status
+        run: |
+          docker ps -a
+          docker inspect -f 'status={{.State.Status}} exit={{.State.ExitCode}} health={{if .State.Health}}{{.State.Health.Status}}{{end}}' db || true
+          docker logs db || true
+
       - name: Debug Postgres DB list
         run: |
           docker exec db psql -U comics_user_prod -d postgres -c "\l"
