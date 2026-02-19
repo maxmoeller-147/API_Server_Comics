@@ -44,6 +44,11 @@ jobs:
             -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
             postgres:16-alpine
 
+      - name: Debug Postgres DB list
+        run: |
+          docker exec db psql -U comics_user_prod -d postgres -c "\l"
+
+
       # Step 5 - Run the API container using the DATABASE_URI secret
       - name: Start API 
         run: |
@@ -51,6 +56,12 @@ jobs:
           -e DATABASE_URI="${{ secrets.DATABASE_URI }}" \
           -e FLASK_APP="main:create_app" \
           comics-api-server:ci
+
+
+      - name: Debug API env
+        run: |
+          docker exec api sh -lc 'echo "DATABASE_URI=$DATABASE_URI"'
+
 
       # Step 6 - Perform a simple test to confirm the API is running  
       - name: Wait for API and test HTTP response
