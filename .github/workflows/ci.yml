@@ -44,6 +44,12 @@ jobs:
             -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
             postgres:16-alpine
 
+      - name: Debug which DB/user are being used (no secrets printed)
+        run: |
+          test -n "${{ secrets.POSTGRES_DB }}" && echo "POSTGRES_DB secret is set" || echo "POSTGRES_DB secret is EMPTY"
+          test -n "${{ secrets.POSTGRES_USER }}" && echo "POSTGRES_USER secret is set" || echo "POSTGRES_USER secret is EMPTY"
+          test -n "${{ secrets.POSTGRES_PASSWORD }}" && echo "POSTGRES_PASSWORD secret is set" || echo "POSTGRES_PASSWORD secret is EMPTY"
+          test -n "${{ secrets.DATABASE_URI }}" && echo "DATABASE_URI secret is set" || echo "DATABASE_URI secret is EMPTY"
 
 
       - name: Wait for Postgres to be ready
