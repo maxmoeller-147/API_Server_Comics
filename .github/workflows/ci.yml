@@ -46,15 +46,22 @@ jobs:
 
 
 
-      - name: Debug DB container status
+      - name: Wait for Postgres to be ready
         run: |
-          docker ps -a
-          docker inspect -f 'status={{.State.Status}} exit={{.State.ExitCode}} health={{if .State.Health}}{{.State.Health.Status}}{{end}}' db || true
-          docker logs db || true
+          for i in {1..30}; do
+            if docker exec db pg_isready -U "${{ secrets.POSTGRES_USER }}" -d "${{ secrets.POSTGRES_DB }}" >/dev/null 2>&1; then
+              echo "Postgres is ready"
+              break
+            fi
+            echo "Waiting for Postgres... ($i)"
+            sleep 2
+          done
+
+          docker exec db pg_isready -U "${{ secrets.POSTGRES_USER }}" -d "${{ secrets.POSTGRES_DB }}"
 
       - name: Debug Postgres DB list
         run: |
-          docker exec db psql -U comics_user_prod -d postgres -c "\l"
+          docker exec db psql -U "${{ secrets.POSTGRES_USER }}" -d "${{ secrets.POSTGRES_DB }}" -c "\l"
 
 
       # Step 5 - Run the API container using the DATABASE_URI secret
@@ -64,12 +71,6 @@ jobs:
           -e DATABASE_URI="${{ secrets.DATABASE_URI }}" \
           -e FLASK_APP="main:create_app" \
           comics-api-server:ci
-
-
-      - name: Debug API env
-        run: |
-          docker exec api sh -lc 'echo "DATABASE_URI=$DATABASE_URI"'
-
 
       # Step 6 - Perform a simple test to confirm the API is running  
       - name: Wait for API and test HTTP response
