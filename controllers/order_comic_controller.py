@@ -17,11 +17,9 @@ def get_order_comics():
     stmt = db.select(OrderComic)
     order_comics_list = db.session.scalars(stmt)
     data = order_comics_schema.dump(order_comics_list)
-    
-    if data:
-        return jsonify(data)
-    elif data == []:
-        return {"message":"No order_comic found."}, 404
+   
+    return jsonify(data), 200
+ 
     
 
 
@@ -32,7 +30,7 @@ def get_order_comic(order_comic_id):
     order_comic = db.session.scalar(stmt)
     if order_comic:
         data = order_comic_schema.dump(order_comic) 
-        return jsonify(data)
+        return jsonify(data), 200
     return {"message": f"OrderComic with order_comic_id={order_comic_id} not found."}, 404
 
 
@@ -78,5 +76,5 @@ def update_order_comic(order_comic_id):
         body_data = request.get_json()
         order_comic = order_comic_schema.load(body_data,instance= order_comic, session = db.session, partial = True)
         db.session.commit()
-        return jsonify(order_comic_schema.dump(order_comic))
+        return jsonify(order_comic_schema.dump(order_comic)), 200
    

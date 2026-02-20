@@ -22,10 +22,7 @@ def get_orders():
     orders_list = db.session.scalars(stmt)
     data = orders_schema.dump(orders_list)
     
-    if data:
-        return jsonify(data)
-    elif data == []:
-        return {"message":"No orders found."}, 404
+    return jsonify(data), 200
     
 
 
