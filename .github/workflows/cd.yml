@@ -1,9 +1,9 @@
 name: CD - Deploy to Cloud Run 
 
 on:
-  push:
-    branches: ["main"]
-  workflow_dispatch: {}
+  workflow_run:
+      workflows: ["CI - Build and Test"]
+      types: [completed]
 
 permissions:
   contents: read
@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -58,7 +59,6 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          # DATABASE_URI via Cloud SQL socket
           DATABASE_URI="postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@/${POSTGRES_DB}?host=/cloudsql/${CLOUDSQL}"
 
           gcloud run deploy "$SERVICE" \
