@@ -34,19 +34,24 @@ jobs:
         run: |
           gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
       
-      # Step 4 - Build and Push a Artifact Registry
-      - name: Build and Push image
-        
+      # Step 4 - Creates Tag, Build and Push a Artifact Registry
+      - name: Set image tag  
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           REGION: ${{ secrets.GCP_REGION }}
-          AR_REPO: ${{ secrets.AR_REPO}}
-        
+          AR_REPO: ${{ secrets.AR_REPO}} 
         run: |
           IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPO}/api-comics:${GITHUB_SHA}"
-          docker build -t "$IMAGE" .
-          docker push "$IMAGE"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Build image with composite action
+        uses: ./.github/actions/docker-build
+        with:
+          image-tag: ${{ env.IMAGE }}
+          
+      - name: Push Image
+        run: |
+          docker push "${{ env.IMAGE }}"
 
       # Step 5 - Deploy a Cloud Run (with Cloud SQL)
       - name: Deploy to Cloud Run
