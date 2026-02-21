@@ -62,7 +62,7 @@ jobs:
       - name: Init DB schema (create_all)
         run: |
           docker run --rm --network ci-net \
-          -e DATABASE_URI="${{ secrets.DATABASE_URI }}" \
+          -e DATABASE_URI="postgresql+psycopg2://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}" \
           -e PYTHONPATH=/app \
           comics-api-server:ci \
           python scripts/init_db.py
