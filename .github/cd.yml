@@ -1,7 +1,7 @@
 name: CD - Deploy to Cloud Run 
 
 on:
-  push: ["main"]
+  push: [" main "]
   workflow_dispatch: {}
 
 permissions:
@@ -44,7 +44,7 @@ jobs:
           IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPO}/api-comics:${GITHUB_SHA}"
           docker build -t "$IMAGE" .
           docker push "$IMAGE"
-          echo "IMAGE=$IMAGE" .. $GITHUB_ENV
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
       # Step 5 - Deploy a Cloud Run (with Cloud SQL)
       - name: Deploy to Cloud Run
